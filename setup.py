@@ -11,7 +11,7 @@ import libgrabsite
 
 install_requires = [
 	"click>=6.3",
-	"wpull @ https://github.com/matthewcen/ludios_wpull/tarball/master9",
+	"wpull @ https://github.com/matthewcen/ludios_wpull/tarball/master",
 	"manhole>=1.0.0",
 	"lmdb>=0.89",
 	"autobahn>=0.12.1",
