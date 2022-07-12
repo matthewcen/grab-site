@@ -14,4 +14,5 @@ RUN apt update && apt-get install --no-install-recommends \
     libxslt1-dev libre2-dev -y
 COPY --from=0 /opt/venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
+WORKDIR /crawls
 CMD [ "gs-server" ]
