@@ -6,7 +6,7 @@ grab-site
 grab-site is an easy preconfigured web crawler designed for backing up websites.
 Give grab-site a URL and it will recursively crawl the site and write
 [WARC files](https://www.archiveteam.org/index.php?title=The_WARC_Ecosystem).
-Internally, grab-site uses [a fork](https://github.com/ludios/wpull) of
+Internally, grab-site uses [a fork](https://github.com/ArchiveTeam/ludios_wpull) of
 [wpull](https://github.com/chfoo/wpull) for crawling.
 
 grab-site gives you
@@ -105,8 +105,16 @@ Install on NixOS
 As a **non-root** user:
 
 ```
+nix-env -f https://github.com/ivan/nixpkgs/archive/release-22.05-latest-grab-site.tar.gz -iA grab-site
+```
+(to install the latest version of grab-site)
+
+OR
+
+```
 nix-env -f https://github.com/NixOS/nixpkgs/archive/release-22.05.tar.gz -iA grab-site
 ```
+(to install grab-site 2.2.2 from the official NixOS/nixpkgs)
 
 
 
@@ -129,8 +137,16 @@ grab-site and its dependencies are available in [nixpkgs](https://github.com/Nix
 3.	As the **non-root** user:
 
 	```
+	nix-env -f https://github.com/ivan/nixpkgs/archive/release-22.05-latest-grab-site.tar.gz -iA grab-site
+	```
+	(to install the latest version of grab-site)
+
+	OR
+
+	```
 	nix-env -f https://github.com/NixOS/nixpkgs/archive/release-22.05.tar.gz -iA grab-site
 	```
+	(to install grab-site 2.2.2 from the official NixOS/nixpkgs)
 
 	and then restart your shell (e.g. by opening a new terminal tab/window).
 
@@ -253,11 +269,6 @@ grab-site 'URL'
 ```
 
 Do this inside tmux unless they're very short crawls.
-Note that [tmux 2.1 is broken and will lock up frequently](https://github.com/tmux/tmux/issues/298).
-Ubuntu 16.04 users probably need to remove tmux 2.1 and
-[install tmux 1.8 from Ubuntu 14.04](https://gist.github.com/ivan/42597ad48c9f10cdd3c05418210e805b).
-If you are unable to downgrade tmux, detaching immediately after starting the
-crawl may be enough to avoid the problem.
 
 grab-site outputs WARCs, logs, and control files to a new subdirectory in the
 directory from which you launched `grab-site`, referred to here as "DIR".
@@ -282,9 +293,11 @@ Options can come before or after the URL.
 	regular expressions.  See [the full list of available ignore sets](https://github.com/ArchiveTeam/grab-site/tree/master/libgrabsite/ignore_sets).
 
 	The [global](https://github.com/ArchiveTeam/grab-site/blob/master/libgrabsite/ignore_sets/global)
-	ignore set is implied and always enabled.
+	ignore set is implied and enabled unless `--no-global-igset` is used.
 
 	The ignore sets can be changed during the crawl by editing the `DIR/igsets` file.
+
+*	`--no-global-igset`: don't add the [global](https://github.com/ArchiveTeam/grab-site/blob/master/libgrabsite/ignore_sets/global) ignore set.
 
 *	`--no-offsite-links`: avoid following links to a depth of 1 on other domains.
 
@@ -657,6 +670,12 @@ the many wpull 2.x fixes that were rolled into
 
 Thanks to [JustAnotherArchivist](https://github.com/JustAnotherArchivist)
 for investigating my wpull issues.
+
+Thanks to [BrowserStack](https://www.browserstack.com/) for providing free
+browser testing for grab-site, which we use to make sure the dashboard works
+in various browsers.
+
+[<img src="https://user-images.githubusercontent.com/211271/29110431-887941d2-7cde-11e7-8c2f-199d85c5a3b5.png" height="30" alt="BrowserStack Logo">](https://www.browserstack.com/)
 
 
 
