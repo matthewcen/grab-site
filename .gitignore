@@ -1,1 +1,4 @@
 __pycache__
+dist
+venv
+grab_site.egg-info
