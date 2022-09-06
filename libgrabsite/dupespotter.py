@@ -105,12 +105,6 @@ def process_body(body, url):
 	# Minimum of 10 to handle UNIX timestamps
 	body = re.sub(br'[A-Fa-f0-9\.]{10,256}', b"", body)
 
-	# Spotted on http://mtnldelhi.in/:
-	# id="tabber_container_0_991">
-	# id="tab_1-1_340">
-	# <a name="tab_1-1_340">
-	body = re.sub(br'\b(id|name|class)="[^"]{0,100}[-_]\d+"', b"", body)
-
 	# Randomized anti-spam mailto: lines
 	body = re.sub(br'<a href="mailto:[^"@]{1,100}@[^"]{2,100}">(&#[0-9a-fA-Fx]{2,4};){3,100}</a>', b"", body)
 
@@ -131,17 +125,9 @@ def process_body(body, url):
 	# <input type="hidden" name="file_uploadToken" value="\d+"
 	body = re.sub(br'<input type="hidden"[^>]{1,16384}?>', b"", body)
 
-	# Spotted on http://www.communauteanimalcrossing.fr/
-	body = re.sub(br'<param name="flashvars" value="servannee=\d{4}&amp;servmois=\d{1,2}&amp;servjour=\d{1,2}&amp;servheure=\d{1,2}&amp;servminute=\d{1,2}&amp;servseconde=\d{1,2}" />', b"", body)
-
 	# vbulletin
 	body = re.sub(br'\(\d+ Viewing\)', b"", body)
 	body = re.sub(br'Currently Active Users</a>: \d+ \(\d+ members and \d+ guests\)', b"", body)
-
-	# v= on http://vstreamers.com/v/images/css/p/videos
-	# cb= on megahits.sapo.pt
-	# pos= on www.smartcast.com.mx
-	body = re.sub(br'[&\?]((v|cb)=\d+|pos=[A-Za-z0-9=]+)', b"", body)
 
 	# spotted on espn.go.com and others
 	body = re.sub(br'(splinks-|var hash = .|":"?)-?\d+', b"", body)
@@ -158,9 +144,6 @@ def process_body(body, url):
 
 		# Drupal sites have randomized sidebar content with these IDs
 		body = re.sub(br'<div class="views-field views-field-[-a-z]+">.*', b"", body)
-
-		# nsslabs.com has this
-		body = re.sub(br'<div class="breadcrumb">.{1,4000}?    </div>', b"", body)
 
 		# sbs.com.au has generated /css_ filenames
 		body = re.sub(br'/css_[-_A-Za-z0-9]{10,100}\.css', b"", body)
