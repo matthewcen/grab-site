@@ -11,7 +11,7 @@ FROM python:3.9-slim-bullseye
 RUN apt update && apt-get install --no-install-recommends \
     ca-certificates libssl-dev zlib1g-dev \
     libbz2-dev libreadline-dev libsqlite3-dev libffi-dev libxml2-dev \
-    libxslt1-dev libre2-dev -y
+    libxslt1-dev libre2-dev python3-wheel -y
 COPY --from=0 /opt/venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 WORKDIR /crawls
