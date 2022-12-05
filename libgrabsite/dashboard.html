@@ -577,16 +577,6 @@
 				return head;
 			};
 
-			// Copied from closure-library's goog.string.startsWith
-			var startsWith = function (str, prefix) {
-				return str.lastIndexOf(prefix, 0) == 0;
-			};
-
-			// Copied from closure-library's goog.string.endsWith
-			var endsWith = function (str, suffix) {
-				var l = str.length - suffix.length;
-				return l >= 0 && str.indexOf(suffix, l) == l;
-			};
 
 			// Based on closure-library's goog.string.regExpEscape
 			var regExpEscape = function (s) {
@@ -953,8 +943,8 @@
 								var filter = ds.getFilter();
 								if (
 									RegExp(filter).test(jobData["url"]) &&
-									startsWith(filter, "^") &&
-									endsWith(filter, "$")
+									filter.startsWith("^") &&
+									filter.endsWith("$")
 								) {
 									// If we're already showing just this log window, go back
 									// to showing nothing.
@@ -1522,7 +1512,7 @@
 				var domain = url.split("/")[2];
 				var withoutQuery = url.split("?")[0];
 				var path = "/" + split(withoutQuery, "/", 3)[3];
-				var reSchema = startsWith(schema, "http") ? "https?" : "ftp";
+				var reSchema = schema.startsWith("http") ? "https?" : "ftp";
 				return this.getPathVariants(path).map(function (p) {
 					return "^" + reSchema + "://" + regExpEscape(domain + p);
 				});
