@@ -77,6 +77,9 @@ def patch_dns_inet_is_multicast():
 @click.option('--import-ignores', default=None, metavar='FILE',
 	help='Copy this file to DIR/ignores before the crawl begins.')
 
+@click.option('--hardlink-ignores', is_flag=True,
+	help='Hardlink instead of copying ignores file')
+
 @click.option('--igon/--igoff', default=False,
 	help=
 		'--igon (default: false) to print all URLs being ignored to the terminal '
@@ -172,7 +175,7 @@ def patch_dns_inet_is_multicast():
 @click.argument('start_url', nargs=-1, required=False)
 
 def main(concurrency, concurrent, delay, recursive, offsite_links, igsets,
-ignore_sets, no_global_igset, import_ignores, igon, debug, video, level,
+ignore_sets, no_global_igset, import_ignores, hardlink_ignores,igon, debug, video, level,
 page_requisites_level, max_content_length, sitemaps, dupespotter, warc_max_size,
 ua, input_file, wpull_args, start_url, id, dir, finished_warc_dir,
 permanent_error_status_codes, which_wpull_args_partial, which_wpull_command):
@@ -339,9 +342,12 @@ permanent_error_status_codes, which_wpull_args_partial, which_wpull_command):
 		with open("{}/igoff".format(working_dir), "w") as f:
 			pass
 
-	with open("{}/ignores".format(working_dir), "w") as f:
-		if import_ignores is not None:
-			f.write(open(import_ignores, "r").read())
+	if import_ignores is not None:
+		if hardlink_ignores:
+			os.link(import_ignores,"{}/ignores".format(working_dir))
+		else:
+			with open("{}/ignores".format(working_dir), "w") as f:
+				f.write(open(import_ignores, "r").read())
 
 	with open("{}/delay".format(working_dir), "w") as f:
 		f.write(delay)
