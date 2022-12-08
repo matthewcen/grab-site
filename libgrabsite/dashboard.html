@@ -1791,27 +1791,31 @@
 				if (ev.shiftKey) {
 					return;
 				}
-				if (ev.which == 106) {
-					// j
-					this.jobsRenderer.showNextPrev(1);
-				} else if (ev.which == 107) {
-					// k
-					this.jobsRenderer.showNextPrev(-1);
-				} else if (ev.which == 97) {
-					// a
-					ds.setFilter("");
-				} else if (ev.which == 110) {
-					// n
-					ds.setFilter("^$");
-				} else if (ev.which == 102) {
-					// f
-					ev.preventDefault();
-					byId("filter-box").focus();
-					byId("filter-box").select();
-				} else if (ev.which == 118) {
-					// v
-					window.open(this.jobsRenderer.firstFilterMatch["url"]);
+				switch (ev.which) {
+					case 106: // j
+						this.jobsRenderer.showNextPrev(1);
+						break;
+					case 107: // k
+						this.jobsRenderer.showNextPrev(-1);
+						break
+					case 97: // a
+						ds.setFilter("");
+						break
+					case 110: // n
+						ds.setFilter("^$");
+						break
+					case 102: // f
+						ev.preventDefault();
+						byId("filter-box").focus();
+						byId("filter-box").select();
+						break
+					case 118: // v
+						window.open(this.jobsRenderer.firstFilterMatch["url"]);
+						break					
+					default:
+						break;
 				}
+
 			};
 
 			Dashboard.prototype.handleData = function (data) {
