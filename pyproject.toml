@@ -24,7 +24,7 @@ dependencies = [
 	"autobahn>=22.1.1",
 	"fb-re2>=1.0.7",
 	"websockets>=10.3",
-    "cchardet>=2.1.7"
+    "faust-cchardet>=2.1.10"
 ]
 authors = [
     {name = "Ivan Kozik", email = "ivan@ludios.org"}
