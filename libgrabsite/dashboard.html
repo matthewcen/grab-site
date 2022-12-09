@@ -473,9 +473,9 @@
 				}
 			};
 
-			let byId = id => document.getElementById(id)
+			let byId = (id) => document.getElementById(id);
 
-			let text = s => document.createTextNode(s)
+			let text = (s) => document.createTextNode(s);
 
 			/**
 			 * Adaptation of ActiveSupport's #blank?.
@@ -483,7 +483,7 @@
 			 * Returns true if the object is undefined, null, or is a string whose
 			 * post-trim length is zero.  Otherwise, returns false.
 			 */
-			let isBlank = o => !o || o.trim().length === 0
+			let isBlank = (o) => !o || o.trim().length === 0;
 
 			/**
 			 * appendChild but accepts strings and arrays of children|strings
@@ -538,7 +538,7 @@
 				}
 			};
 
-			let prettyJson = obj => JSON.stringify(obj, undefined, 2);
+			let prettyJson = (obj) => JSON.stringify(obj, undefined, 2);
 
 			// Copied from Coreweb/js_coreweb/cw/string.js
 			/**
@@ -569,7 +569,6 @@
 				return head;
 			};
 
-
 			// Based on closure-library's goog.string.regExpEscape
 			let regExpEscape = function (s) {
 				let escaped = String(s)
@@ -588,7 +587,7 @@
 			 */
 			let intoObject = function (arr) {
 				let obj = {};
-				arr.forEach(e => obj[e[0]] = e[1])
+				arr.forEach((e) => (obj[e[0]] = e[1]));
 				return obj;
 			};
 
@@ -597,9 +596,7 @@
 				if (pairs == "") {
 					return {};
 				}
-				return intoObject(
-					pairs.map(e => split(e, "=", 1))
-				);
+				return intoObject(pairs.map((e) => split(e, "=", 1)));
 			};
 
 			let isChrome = navigator.userAgent.indexOf("Chrome/") != -1;
@@ -615,7 +612,8 @@
 				elem.addEventListener("input", func, false);
 			};
 
-			let arrayFrom = arrayLike => Array.prototype.slice.call(arrayLike);
+			let arrayFrom = (arrayLike) =>
+				Array.prototype.slice.call(arrayLike);
 
 			/**
 			 * Returns a function that gets the given property on any object passed in
@@ -629,8 +627,8 @@
 			/**
 			 * Returns a function that adds the given class to any element passed in
 			 */
-			let classAdder = name => {
-				return elem => elem.classList.add(name);
+			let classAdder = (name) => {
+				return (elem) => elem.classList.add(name);
 			};
 
 			/**
@@ -661,64 +659,61 @@
 			};
 
 			/*** End of utility code ***/
-
-			let JobsTracker = function () {
-				this.known = {};
-				this.sorted = [];
-				this.finishedArray = [];
-				this.finishedSet = {};
-				this.fatalExceptionSet = {};
-			};
-
-			JobsTracker.prototype.countActive = function () {
-				return this.sorted.length - this.finishedArray.length;
-			};
-
-			JobsTracker.prototype.resort = function () {
-				this.sorted.sort(function (a, b) {
-					return a["started_at"] > b["started_at"] ? -1 : 1;
-				});
-			};
-
-			/**
-			 * Returns true if a new job was added
-			 */
-			JobsTracker.prototype.handleJobData = function (jobData) {
-				let ident = jobData["ident"];
-				let alreadyKnown = ident in this.known;
-				if (!alreadyKnown) {
-					this.known[ident] = true;
-					this.sorted.push(jobData);
-					this.resort();
+			class JobsTracker {
+				constructor() {
+					this.known = {};
+					this.sorted = [];
+					this.finishedArray = [];
+					this.finishedSet = {};
+					this.fatalExceptionSet = {};
 				}
-				return !alreadyKnown;
-			};
 
-			JobsTracker.prototype.markFinished = function (ident) {
-				if (!(ident in this.finishedSet)) {
-					this.finishedSet[ident] = true;
-					this.finishedArray.push(ident);
+				countActive() {
+					return this.sorted.length - this.finishedArray.length;
 				}
-			};
-
-			JobsTracker.prototype.markUnfinished = function (ident) {
-				if (ident in this.finishedSet) {
-					delete this.finishedSet[ident];
-					removeFromArray(this.finishedArray, ident);
+				resort() {
+					this.sorted.sort(function (a, b) {
+						return a["started_at"] > b["started_at"] ? -1 : 1;
+					});
 				}
-				// Job was restarted, so unmark fatal exception
-				if (ident in this.fatalExceptionSet) {
-					delete this.fatalExceptionSet[ident];
+				// Returns true if a new job was added
+				handleData(jobData) {
+					let ident = jobData["ident"];
+					let alreadyKnown = ident in this.known;
+					if (!alreadyKnown) {
+						this.known[ident] = true;
+						this.sorted.push(jobData);
+						this.resort();
+					}
+					return !alreadyKnown;
 				}
-			};
 
-			JobsTracker.prototype.markFatalException = function (ident) {
-				this.fatalExceptionSet[ident] = true;
-			};
+				markFinished(ident) {
+					if (!(ident in this.finishedSet)) {
+						this.finishedSet[ident] = true;
+						this.finishedArray.push(ident);
+					}
+				}
 
-			JobsTracker.prototype.hasFatalException = function (ident) {
-				return ident in this.fatalExceptionSet;
-			};
+				markUnfinished(ident) {
+					if (ident in this.finishedSet) {
+						delete this.finishedSet[ident];
+						removeFromArray(this.finishedArray, ident);
+					}
+					// Job was restarted, so unmark fatal exception
+					if (ident in this.fatalExceptionSet) {
+						delete this.fatalExceptionSet[ident];
+					}
+				}
+
+				markFatalException(ident) {
+					this.fatalExceptionSet[ident] = true;
+				}
+
+				hasFatalException(ident) {
+					return ident in this.fatalExceptionSet;
+				}
+			}
 
 			let JobRenderInfo = function (
 				logWindow,
@@ -748,7 +743,8 @@
 			};
 
 			// http://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
-			let numberWithCommas = s_or_n => ("" + s_or_n).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			let numberWithCommas = (s_or_n) =>
+				("" + s_or_n).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
 			let toStringTenths = function (n) {
 				let s = "" + Math.round(10 * n) / 10;
@@ -833,7 +829,7 @@
 				return null;
 			};
 
-			JobsRenderer.prototype._createLogSegment = () =>  h("div");
+			JobsRenderer.prototype._createLogSegment = () => h("div");
 
 			JobsRenderer.prototype._createLogContainer = function (jobData) {
 				let ident = jobData["ident"];
@@ -1797,25 +1793,24 @@
 						break;
 					case 107: // k
 						this.jobsRenderer.showNextPrev(-1);
-						break
+						break;
 					case 97: // a
 						ds.setFilter("");
-						break
+						break;
 					case 110: // n
 						ds.setFilter("^$");
-						break
+						break;
 					case 102: // f
 						ev.preventDefault();
 						byId("filter-box").focus();
 						byId("filter-box").select();
-						break
+						break;
 					case 118: // v
 						window.open(this.jobsRenderer.firstFilterMatch["url"]);
-						break					
+						break;
 					default:
 						break;
 				}
-
 			};
 
 			Dashboard.prototype.handleData = function (data) {
