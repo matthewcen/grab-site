@@ -329,7 +329,10 @@ permanent_error_status_codes, which_wpull_args_partial, which_wpull_command):
 		with open("{}/igoff".format(working_dir), "w") as f:
 			pass
 
-	if import_ignores is not None:
+	if import_ignores is None:
+		with open("{}/ignores".format(working_dir), "w") as f:
+					f.write("")
+	else:
 		if hardlink_ignores:
 			os.link(import_ignores,"{}/ignores".format(working_dir))
 		else:
